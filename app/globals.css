@@ -1,0 +1,10 @@
+@import "tailwindcss";
+
+:root {
+  --primary-color: #1565c0;
+  --accent-color: #ffb300;
+}
+body {
+  background-image: linear-gradient(to right, #ebf8ff, #f7fafc);
+  color: #1f2937;
+}
