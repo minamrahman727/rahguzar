@@ -22,11 +22,11 @@ Developed solely by **Syed Minam Ur Rehman**, RahGuzar ensures a seamless and us
 RahGuzar provides well-structured and up-to-date information on Karachi's public transport routes. Each route includes:  
 - Route number and transport type  
 - List of all stops along the way  
-- Fare range (minimum and maximum cost)  
+- Fare range (minimum cost)  
 - Accessibility features  
 
 ### 2. Smart Fare Display  
-Instead of a single fare value, RahGuzar displays a **fare range** (`min` and `max` values), ensuring users know the lowest and highest possible cost for their trip.  
+Instead of a single fare value, RahGuzar displays a **minimum fare**, ensuring users know the lowest possible cost for their trip.  
 
 ### 3. Advanced Filtering System  
 Users can filter routes based on transport type:  
