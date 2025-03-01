@@ -75,7 +75,7 @@ RahGuzar is built with modern web technologies to ensure speed, reliability, and
 
 ## Acknowledgment  
 
-A major contribution for arranging and verifying Karachi’s public transport routes belongs to **Mnzil.app by CheelTech**. Their efforts in compiling detailed route information have greatly improved the accuracy of RahGuzar.  
+A major contribution for arranging and verifying Karachi’s public transport routes belongs to **[mnzil.app](https://mnzil.app) by CheelTech**. Their efforts in compiling detailed route information have greatly improved the accuracy of RahGuzar.  
 
 ---
 
