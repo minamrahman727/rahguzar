@@ -22,8 +22,8 @@ const iconMapping: Record<string, string> = {
 // Sample routes
 const routes = [
 
-{ type: "brts",fare:50, number: "Green line BRT", details: "Abdullah chock to numaish", stops: ["Abdullah chock", "KDA Surjani", "Karimi chowrangi","4k chowrangi","2minute chowrangi","Road-2400 Aisha complex","Power house chowrangi","Road 4200 Saleem center","Up More","Nagan Chowrangi","Erum shopping center","Sakhi hasan chowrangi","Jummah bazaar(bhayani center)","5 star chowrangi","HYDERI","BOARD OFFICE","ANNU BHAI PARK","ENQUIRY OFFICE","NAZIMABAD no.1","SANITARY MARKET(GULBAHAR)","LASBELA","PATEL PARA(guru mandir)","NUMAISH"] },
-{ type: "brts",fare:20, number: "Orange line BRT", details: "board office to nadra office orangi town", stops: ["BOARD OFFICE", "ABDULLAH COLLEGE", "POLICE STATION - (orangi town)","NADRA CENTER - (orangi town)"] },
+{ type: "brts",fare:55, number: "Green line BRT", details: "Abdullah chock to numaish", stops: ["Abdullah chock", "KDA Surjani", "Karimi chowrangi","4k chowrangi","2minute chowrangi","Road-2400 Aisha complex","Power house chowrangi","Road 4200 Saleem center","Up More","Nagan Chowrangi","Erum shopping center","Sakhi hasan chowrangi","Jummah bazaar(bhayani center)","5 star chowrangi","HYDERI","BOARD OFFICE","ANNU BHAI PARK","ENQUIRY OFFICE","NAZIMABAD no.1","SANITARY MARKET(GULBAHAR)","LASBELA","PATEL PARA(guru mandir)","NUMAISH"] },
+{ type: "brts",fare:25, number: "Orange line BRT", details: "board office to nadra office orangi town", stops: ["BOARD OFFICE", "ABDULLAH COLLEGE", "POLICE STATION - (orangi town)","NADRA CENTER - (orangi town)"] },
 
 
 
