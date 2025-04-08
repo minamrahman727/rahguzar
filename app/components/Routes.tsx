@@ -176,7 +176,7 @@ const routes = [
     { type: "chinchi", number: "Z-4",  fare: 20,                 details: "Short Distance Ride", stops: ["SHERSHAH","GHANI CHOWRANGI","SEIMENS CHOWRANGI","HABIB BANK CHOWRANGI","HAROONABAD"] }
     ];
 
-    type RoutesProps = {};
+    type RoutesProps = Record<string, never>;
 
 const Routes: React.FC<RoutesProps> = () => {
     const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
