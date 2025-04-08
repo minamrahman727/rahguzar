@@ -13,42 +13,35 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RahGuzar",
-  description: "Your Ultimate Karachi Public Transport Guide. Developed solely by Syed Minam Ur Rehman, RahGuzar helps you plan hassle-free trips using BRTS, People Bus, Local Bus, and Chinchi with real-time routes, fares, and stops. Navigate Karachi smarter!",
-  
+  title: {
+    default: "RahGuzar",
+    template: "%s - RahGuzar",
+  },
+  description: "Navigate Karachi effortlessly with real-time transit updates.",
   icons: {
     icon: "/images/route.png",
+    apple: "/images/route.png",
   },
   openGraph: {
-    title: "RahGuzar",
-    description: "Your Ultimate Karachi Public Transport Guide. Developed solely by Syed Minam Ur Rehman, RahGuzar helps you plan hassle-free trips using BRTS, People Bus, Local Bus, and Chinchi with real-time routes, fares, and stops. Navigate Karachi smarter!",
     url: "https://rahguzar.vercel.app/",
-    siteName: "RahGuzar",
+    title: "RahGuzar – Your Karachi Journey",
+    description: "Discover Karachi with smart, minimalist transit guidance.",
     images: [
       {
-        url: "images/route.png",
+        url: "/images/route.png",
         width: 800,
         height: 600,
+        alt: "RahGuzar Route",
       },
     ],
-    locale: "en_US",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "RahGuzar",
-    description: "Your Ultimate Karachi Public Transport Guide. Developed solely by Syed Minam Ur Rehman, RahGuzar helps you plan hassle-free trips using BRTS, People Bus, Local Bus, and Chinchi with real-time routes, fares, and stops. Navigate Karachi smarter!",
-    creator: "@syedminamurrehman",
+    title: "RahGuzar – Your Karachi Journey",
+    description: "Discover Karachi transit with smart updates.",
     site: "@rahguzar",
-    images: ["images/route.png"],
-  },
-  alternates: {
-    canonical: "https://roadmapper.vercel.app/",
-    languages: {
-      en: "https://roadmapper.vercel.app/",
-      es: "https://roadmapper.vercel.app/",
-      ur: "https://roadmapper.vercel.app/",
-    },
+    images: ["/images/route.png"],
   },
 };
 
