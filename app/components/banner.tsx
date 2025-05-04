@@ -4,11 +4,9 @@ import Link from 'next/link';
 import { motion, AnimatePresence, useAnimation, useMotionValue, useTransform } from 'framer-motion';
 import { AlertTriangle, Info, X, ChevronDown, MapPin, Clock, ExternalLink, Calendar, Shield, List } from 'lucide-react';
 
-// Define the types for the notification banner
 type NotificationVariant = 'warning' | 'info' | 'error' | 'success';
 type NotificationPosition = 'top' | 'bottom' | 'inline';
 
-// Interface for banned road data
 interface BannedRoad {
     id: number;
     name: string;
@@ -16,7 +14,6 @@ interface BannedRoad {
     isExpanded?: boolean;
 }
 
-// Interface for the NotificationBanner props
 interface NotificationBannerProps {
     className?: string;
     onClose?: () => void;
@@ -32,7 +29,6 @@ interface NotificationBannerProps {
     glassmorphism?: boolean;
 }
 
-// Banned roads data
 const BANNED_ROADS: BannedRoad[] = [
     { id: 1, name: "Shahrah-e-Faisal", details: "From Avari Light Signal to Madam Apartments" },
     { id: 2, name: "I.I. Chundrigar Road", details: "From Tower to Shaheen Complex" },
@@ -47,15 +43,13 @@ const BANNED_ROADS: BannedRoad[] = [
     { id: 11, name: "Mauripur Road", details: "From Gulbai to ICI Bridge" }
 ];
 
-// Enforcement details
 const ENFORCEMENT_DETAILS = {
     duration: "April 15 to June 14, 2025",
     legalBasis: "Section 144 CrPC; violations subject to action under Section 188 PPC",
     enforcement: "All Station House Officers (SHOs) have been directed to ensure strict compliance with the ban"
 };
 
-// NotificationBanner component
-export default function NotificationBanner({
+function NotificationBanner({
     className = '',
     onClose,
     showCloseButton = true,
@@ -64,90 +58,76 @@ export default function NotificationBanner({
     expandable = true,
     pulseEffect = true,
     position = 'inline',
-    highlightWords = false, // added default value
+    highlightWords = false,
     animated = true,
     showLocationPin = true,
     glassmorphism = true,
 }: NotificationBannerProps) {
-    // State for controlling banner visibility
     const [isVisible, setIsVisible] = useState(true);
-    // State for controlling the expanded state of the banner
     const [isExpanded, setIsExpanded] = useState(false);
-    // State for managing the active tab in the expanded content
     const [activeTab, setActiveTab] = useState(0);
-    // State to manage the expanded state of individual roads
     const [expandedRoads, setExpandedRoads] = useState<Record<number, boolean>>({});
-    // State for the search query
     const [searchQuery, setSearchQuery] = useState('');
-    // State for the filtered list of banned roads based on search query
     const [filteredRoads, setFilteredRoads] = useState<BannedRoad[]>(BANNED_ROADS);
-    // Ref for the banner element to detect outside clicks
     const bannerRef = useRef<HTMLDivElement>(null);
-    // Animation controls for Framer Motion
     const controls = useAnimation();
-    // Motion value for horizontal movement
     const x = useMotionValue(0);
-    // Motion value for drag gesture
     const dragX = useMotionValue(0);
-    // Opacity based on dragX value
     const opacity = useTransform(dragX, [-100, 0], [0, 1]);
 
-    // Refined variant-based styles with improved color harmonies
     const variantStyles = {
         warning: {
-            bg: glassmorphism ? 'bg-amber-50/90 backdrop-blur-sm' : 'bg-gradient-to-r from-amber-50 to-amber-100',
-            border: 'border-l-4 border-amber-600',
+            bg: glassmorphism ? 'bg-amber-100/95 backdrop-blur-md' : 'bg-gradient-to-r from-amber-200 to-amber-100',
+            border: 'border-l-8 border-amber-700',
             text: 'text-amber-900',
-            icon: <AlertTriangle className="h-5 w-5 text-amber-600" />,
-            pulse: 'bg-amber-500',
-            accent: 'bg-amber-600',
-            highlight: 'bg-amber-200 text-amber-900 px-1 rounded',
-            shadow: 'shadow-amber-200',
-            button: 'bg-amber-600 hover:bg-amber-700 text-white'
+            icon: <AlertTriangle className="h-6 w-6 text-amber-700" />,
+            pulse: 'bg-amber-600',
+            accent: 'bg-amber-700',
+            highlight: 'bg-amber-300 text-amber-900 px-1 rounded font-bold',
+            shadow: 'shadow-2xl shadow-amber-300/40',
+            button: 'bg-amber-700 hover:bg-amber-800 text-white'
         },
         info: {
-            bg: glassmorphism ? 'bg-blue-50/90 backdrop-blur-sm' : 'bg-gradient-to-r from-blue-50 to-blue-100',
-            border: 'border-l-4 border-blue-600',
+            bg: glassmorphism ? 'bg-blue-100/95 backdrop-blur-md' : 'bg-gradient-to-r from-blue-200 to-blue-100',
+            border: 'border-l-8 border-blue-700',
             text: 'text-blue-900',
-            icon: <Info className="h-5 w-5 text-blue-600" />,
-            pulse: 'bg-blue-500',
-            accent: 'bg-blue-600',
-            highlight: 'bg-blue-200 text-blue-900 px-1 rounded',
-            shadow: 'shadow-blue-200',
-            button: 'bg-blue-600 hover:bg-blue-700 text-white'
+            icon: <Info className="h-6 w-6 text-blue-700" />,
+            pulse: 'bg-blue-600',
+            accent: 'bg-blue-700',
+            highlight: 'bg-blue-300 text-blue-900 px-1 rounded font-bold',
+            shadow: 'shadow-2xl shadow-blue-300/40',
+            button: 'bg-blue-700 hover:bg-blue-800 text-white'
         },
         error: {
-            bg: glassmorphism ? 'bg-red-50/90 backdrop-blur-sm' : 'bg-gradient-to-r from-red-50 to-red-100',
-            border: 'border-l-4 border-red-600',
+            bg: glassmorphism ? 'bg-red-100/95 backdrop-blur-md' : 'bg-gradient-to-r from-red-200 to-red-100',
+            border: 'border-l-8 border-red-700',
             text: 'text-red-900',
-            icon: <AlertTriangle className="h-5 w-5 text-red-600" />,
-            pulse: 'bg-red-500',
-            accent: 'bg-red-600',
-            highlight: 'bg-red-200 text-red-900 px-1 rounded',
-            shadow: 'shadow-red-200',
-            button: 'bg-red-600 hover:bg-red-700 text-white'
+            icon: <AlertTriangle className="h-6 w-6 text-red-700" />,
+            pulse: 'bg-red-600',
+            accent: 'bg-red-700',
+            highlight: 'bg-red-300 text-red-900 px-1 rounded font-bold',
+            shadow: 'shadow-2xl shadow-red-300/40',
+            button: 'bg-red-700 hover:bg-red-800 text-white'
         },
         success: {
-            bg: glassmorphism ? 'bg-emerald-50/90 backdrop-blur-sm' : 'bg-gradient-to-r from-emerald-50 to-emerald-100',
-            border: 'border-l-4 border-emerald-600',
+            bg: glassmorphism ? 'bg-emerald-100/95 backdrop-blur-md' : 'bg-gradient-to-r from-emerald-200 to-emerald-100',
+            border: 'border-l-8 border-emerald-700',
             text: 'text-emerald-900',
-            icon: <Info className="h-5 w-5 text-emerald-600" />,
-            pulse: 'bg-emerald-500',
-            accent: 'bg-emerald-600',
-            highlight: 'bg-emerald-200 text-emerald-900 px-1 rounded',
-            shadow: 'shadow-emerald-200',
-            button: 'bg-emerald-600 hover:bg-emerald-700 text-white'
+            icon: <Info className="h-6 w-6 text-emerald-700" />,
+            pulse: 'bg-emerald-600',
+            accent: 'bg-emerald-700',
+            highlight: 'bg-emerald-300 text-emerald-900 px-1 rounded font-bold',
+            shadow: 'shadow-2xl shadow-emerald-300/40',
+            button: 'bg-emerald-700 hover:bg-emerald-800 text-white'
         }
     };
 
-    // Position-based styles
     const positionStyles = {
         top: 'fixed top-0 left-0 right-0 z-50 mx-4 mt-4 md:mx-auto md:max-w-2xl',
         bottom: 'fixed bottom-0 left-0 right-0 z-50 mx-4 mb-4 md:mx-auto md:max-w-2xl',
         inline: ''
     };
 
-    // Filter roads based on search query
     useEffect(() => {
         if (!searchQuery.trim()) {
             setFilteredRoads(BANNED_ROADS);
@@ -161,7 +141,6 @@ export default function NotificationBanner({
         }
     }, [searchQuery]);
 
-    // Auto-dismiss timer
     useEffect(() => {
         if (!persistent) {
             const timer = setTimeout(() => {
@@ -172,21 +151,19 @@ export default function NotificationBanner({
         }
     }, [persistent, onClose]);
 
-    // Click outside to collapse
     useEffect(() => {
-        if (!expandable) return;
-        
-        const handleClickOutside = (event: MouseEvent) => {
-            if (bannerRef.current && !bannerRef.current.contains(event.target as Node) && isExpanded) {
+        if (!expandable || !isExpanded) return;
+        function handleClickOutside(event: MouseEvent) {
+            if (bannerRef.current && !bannerRef.current.contains(event.target as Node)) {
                 setIsExpanded(false);
             }
-        };
-
+        }
         document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
     }, [isExpanded, expandable]);
 
-    // Attention-getting effect on initial render
     useEffect(() => {
         if (animated) {
             const sequence = async () => {
@@ -199,18 +176,15 @@ export default function NotificationBanner({
         }
     }, [controls, animated]);
 
-    // Function to handle closing the banner
     const handleClose = () => {
         setIsVisible(false);
         if (onClose) onClose();
     };
 
-    // Function to toggle the expanded state of the banner
     const toggleExpand = () => {
         setIsExpanded(!isExpanded);
     };
 
-    // Function to toggle the expanded state of a road
     const toggleRoadExpand = (id: number) => {
         setExpandedRoads(prev => ({
             ...prev,
@@ -218,33 +192,13 @@ export default function NotificationBanner({
         }));
     };
 
-    // Function to handle changes in the search input
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(e.target.value);
     };
 
-    // Function to highlight words
-    const getHighlightedText = (text: string) => {
-        if (!highlightWords) {
-            return text;
-        }
-
-        const wordsToHighlight = ["banned", "restricted"]; // Example words
-        const regex = new RegExp(`\\b(${wordsToHighlight.join('|')})\\b`, 'gi');
-        return text.split(regex).map((part, index) => {
-            if (wordsToHighlight.some(word => part.toLowerCase() === word.toLowerCase())) {
-                return <span key={index} className={style.highlight}>{part}</span>;
-            }
-            return part;
-        });
-    };
-
-    // Get the styles based on the variant
     const style = variantStyles[variant];
-    // Get the position styles
     const posStyle = positionStyles[position];
 
-    // Animation variants
     const containerVariants = {
         hidden: { opacity: 0, y: position === 'bottom' ? 50 : -50 },
         visible: { 
@@ -261,8 +215,22 @@ export default function NotificationBanner({
         exit: { 
             opacity: 0, 
             y: position === 'bottom' ? 20 : -20,
-            transition: { duration: 0.3, ease: "easeOut" }
+            transition: { duration: 0.3, ease: "easeOut" },
         }
+    };
+
+    const getHighlightedText = (text: string) => {
+        if (!highlightWords) {
+            return text;
+        }
+        const wordsToHighlight = ["banned", "restricted"];
+        const regex = new RegExp(`\\b(${wordsToHighlight.join('|')})\\b`, 'gi');
+        return text.split(regex).map((part, index) => {
+            if (wordsToHighlight.some(word => part.toLowerCase() === word.toLowerCase())) {
+                return <span key={index} className={style.highlight}>{part}</span>;
+            }
+            return part;
+        });
     };
 
     const expandVariants = {
@@ -298,7 +266,6 @@ export default function NotificationBanner({
         }
     };
 
-    // Swipe to dismiss
     const onDragEnd = () => {
         if (dragX.get() < -80) {
             setIsVisible(false);
@@ -308,379 +275,371 @@ export default function NotificationBanner({
         }
     };
 
+    if (!isVisible) return null;
+
     return (
         <AnimatePresence>
-            {isVisible && (
-                <motion.div
-                    ref={bannerRef}
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate={controls}
-                    exit="exit"
-                    style={{ x, opacity }}
-                    drag={showCloseButton ? "x" : false}
-                    dragConstraints={{ left: 0, right: 0 }}
-                    dragElastic={0.2}
-                    onDragEnd={onDragEnd}
-                    dragDirectionLock
-                    onDrag={(_, info) => {
-                        if (info.offset.x < 0) {
-                            dragX.set(info.offset.x);
-                        }
-                    }}
-                    className={`${style.bg} ${style.border} ${style.text} p-4 rounded-lg ${style.shadow} relative overflow-hidden ${posStyle} ${className}`}
-                    role="alert"
-                    aria-live="assertive"
-                >
-                    {/* Decorative elements */}
-                    {pulseEffect && (
+            <motion.div
+                ref={bannerRef}
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                style={{ x, opacity }}
+                drag={showCloseButton ? "x" : false}
+                dragConstraints={{ left: 0, right: 0 }}
+                dragElastic={0.2}
+                onDragEnd={onDragEnd}
+                dragDirectionLock
+                onDrag={(_, info) => {
+                    if (info.offset.x < 0) {
+                        dragX.set(info.offset.x);
+                    }
+                }}
+                className={`${style.bg} ${style.border} ${style.text} p-5 rounded-xl ${style.shadow} relative overflow-hidden ${posStyle} ${className} focus:outline-none focus:ring-4 focus:ring-black/30`}
+                role="alert"
+                aria-live="assertive"
+                tabIndex={0}
+            >
+                {pulseEffect && (
+                    <motion.div 
+                        className={`absolute -top-12 -right-12 rounded-full w-32 h-32 ${style.pulse} opacity-40`}
+                        animate={{
+                            scale: [1, 1.5, 1],
+                            opacity: [0.4, 0.7, 0.4]
+                        }}
+                        transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            repeatType: "reverse"
+                        }}
+                    />
+                )}
+                {showLocationPin && (
+                    <motion.div 
+                        className={`absolute top-2 left-2 ${style.text} opacity-20`}
+                        animate={{
+                            rotate: [0, 5, 0, -5, 0],
+                        }}
+                        transition={{
+                            duration: 10,
+                            repeat: Infinity,
+                            repeatType: "loop"
+                        }}
+                    >
+                        <MapPin className="h-20 w-20" />
+                    </motion.div>
+                )}
+                {glassmorphism && (
+                    <div className="absolute inset-0 bg-white/40 backdrop-blur-md -z-10" />
+                )}
+                <div className="flex items-center justify-between relative z-10">
+                    <div className="flex items-center flex-1">
                         <motion.div 
-                            className={`absolute -top-12 -right-12 rounded-full w-24 h-24 ${style.pulse} opacity-30`}
-                            animate={{
-                                scale: [1, 1.5, 1],
-                                opacity: [0.3, 0.6, 0.3]
-                            }}
-                            transition={{
-                                duration: 3,
-                                repeat: Infinity,
-                                repeatType: "reverse"
-                            }}
-                        />
-                    )}
-                    
-                    {showLocationPin && (
-                        <motion.div 
-                            className={`absolute top-1 left-1 ${style.text} opacity-10`}
-                            animate={{
-                                rotate: [0, 5, 0, -5, 0],
-                            }}
-                            transition={{
-                                duration: 10,
-                                repeat: Infinity,
-                                repeatType: "loop"
-                            }}
+                            className="mr-4 flex-shrink-0"
+                            whileHover={{ rotate: [0, -10, 10, -10, 0] }}
+                            transition={{ duration: 0.5 }}
                         >
-                            <MapPin className="h-16 w-16" />
+                            {style.icon}
                         </motion.div>
-                    )}
-                    
-                    {glassmorphism && (
-                        <div className="absolute inset-0 bg-white/30 backdrop-blur-sm -z-10" />
-                    )}
-                    
-                    <div className="flex items-center justify-between relative z-10">
-                        <div className="flex items-center flex-1">
-                            <motion.div 
-                                className="mr-3 flex-shrink-0"
-                                whileHover={{ rotate: [0, -10, 10, -10, 0] }}
-                                transition={{ duration: 0.5 }}
-                            >
-                                {style.icon}
-                            </motion.div>
-                            <div className="flex-1">
-                                <div className="text-sm md:text-base font-black flex items-center">
-                                Three wheelers banned throughout Karachi on 11 roads
-
-                                   
-                                    {expandable && (
-                                        <motion.button 
-                                            onClick={toggleExpand} 
-                                            className={`ml-2 p-1 rounded-full  hover:bg-opacity-10 transition-colors`}
-                                            whileHover={{ scale: 1.1, rotate: isExpanded ? -180 : 0 }}
-                                            whileTap={{ scale: 0.9 }}
-                                            animate={{ rotate: isExpanded ? 180 : 0 }}
-                                            transition={{ duration: 0.3 }}
-                                            aria-expanded={isExpanded}
-                                            aria-label={isExpanded ? "Show less information" : "Show more information"}
-                                        >
-                                            <ChevronDown className={`h-4 w-4 ${style.text}`} />
-                                        </motion.button>
-                                    )}
-                                </div>
+                        <div className="flex-1">
+                            <div className="text-base md:text-lg font-extrabold flex items-center">
+                                {getHighlightedText("Three wheelers banned throughout Karachi on 11 roads")}
+                                {expandable && (
+                                    <motion.button 
+                                        onClick={toggleExpand} 
+                                        className={`ml-2 p-2 rounded-full hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-black/30 transition-colors`}
+                                        whileHover={{ scale: 1.1, rotate: isExpanded ? -180 : 0 }}
+                                        whileTap={{ scale: 0.9 }}
+                                        animate={{ rotate: isExpanded ? 180 : 0 }}
+                                        transition={{ duration: 0.3 }}
+                                        aria-expanded={isExpanded}
+                                        aria-label={isExpanded ? "Show less information" : "Show more information"}
+                                    >
+                                        <ChevronDown className={`h-5 w-5 ${style.text}`} />
+                                    </motion.button>
+                                )}
                             </div>
                         </div>
-                        
-                        {showCloseButton && (
-                            <motion.button 
-                                onClick={handleClose}
-                                className={`ml-3 p-1 rounded-full hover:bg-black hover:bg-opacity-10 transition-colors flex-shrink-0`}
-                                whileHover={{ scale: 1.1, rotate: 90 }}
-                                whileTap={{ scale: 0.9 }}
-                                aria-label="Close notification"
-                            >
-                                <X className={`h-4 w-4 ${style.text}`} />
-                            </motion.button>
-                        )}
                     </div>
-                    
-                    {/* Expandable content with tabs */}
-                    {expandable && (
-                        <motion.div
-                            variants={expandVariants}
-                            initial="collapsed"
-                            animate={isExpanded ? "expanded" : "collapsed"}
-                            className="overflow-hidden"
+                    {showCloseButton && (
+                        <motion.button 
+                            onClick={handleClose}
+                            className={`ml-3 p-2 rounded-full hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-black/30 transition-colors flex-shrink-0`}
+                            whileHover={{ scale: 1.1, rotate: 90 }}
+                            whileTap={{ scale: 0.9 }}
+                            aria-label="Close notification"
                         >
-                            <motion.div 
-                                className="mt-3 pt-3 border-t border-opacity-20"
-                                style={{ borderColor: `rgba(var(--${variant}-600-rgb), 0.3)` }}
-                                variants={itemVariants}
-                            >
-                                {/* Tabs */}
-                                <div className="flex space-x-2 mb-3 flex-wrap">
-                                    <motion.button
-                                        className={`px-3 py-1  text-xs font-medium transition-colors mb-2 ${activeTab === 0 ? style.button : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
-                                        onClick={() => setActiveTab(0)}
-                                        whileHover={{ scale: 1.05 }}
-                                        whileTap={{ scale: 0.95 }}
-                                    >
-                                        <div className="flex items-center">
-                                            <List className="h-3 w-3 mr-1" />
-                                            <span>Banned Roads</span>
-                                        </div>
-                                    </motion.button>
-                                    <motion.button
-                                        className={`px-3 py-1 rounded-md text-xs font-medium transition-colors mb-2 ${activeTab === 1 ? style.button : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
-                                        onClick={() => setActiveTab(1)}
-                                        whileHover={{ scale: 1.05 }}
-                                        whileTap={{ scale: 0.95 }}
-                                    >
-                                        <div className="flex items-center">
-                                            <Shield className="h-3 w-3 mr-1" />
-                                            <span>Enforcement</span>
-                                        </div>
-                                    </motion.button>
-                                    <motion.button
-                                        className={`px-3 py-1 rounded-md text-xs font-medium transition-colors mb-2 ${activeTab === 2 ? style.button : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
-                                        onClick={() => setActiveTab(2)}
-                                        whileHover={{ scale: 1.05 }}
-                                        whileTap={{ scale: 0.95 }}
-                                    >
-                                        <div className="flex items-center">
-                                            <Calendar className="h-3 w-3 mr-1" />
-                                            <span>Timeline</span>
-                                        </div>
-                                    </motion.button>
-                                </div>
-                                
-                                {/* Tab content */}
-                                <AnimatePresence mode="wait">
-                                    <motion.div
-                                        key={activeTab}
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -10 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        {activeTab === 0 && (
-                                            <div className="space-y-3">
-                                                {/* Search input */}
-                                                <div className="relative">
-                                                    <input
-                                                        type="text"
-                                                        placeholder="Search roads..."
-                                                        value={searchQuery}
-                                                        onChange={handleSearchChange}
-                                                        className="w-full px-3 py-2 bg-white bg-opacity-70 rounded-md border border-gray-200 text-xs placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-opacity-50"
-                                                        style={{ 
-                                                                borderColor: 'rgba(0,0,0,0.1)' 
-                                                            }}
-                                                    />
-                                                    {searchQuery && (
-                                                        <button
-                                                            onClick={() => setSearchQuery('')}
-                                                            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                                                        >
-                                                            <X className="h-3 w-3" />
-                                                        </button>
-                                                    )}
-                                                </div>
-                                                
-                                                {/* Roads list */}
-                                                <div className="max-h-64 overflow-y-auto pr-1 space-y-2">
-                                                    {filteredRoads.length > 0 ? (
-                                                        filteredRoads.map((road) => (
-                                                            <motion.div 
-                                                                key={road.id}
-                                                                className="bg-white bg-opacity-60 p-2 rounded-md shadow-sm border border-gray-100"
-                                                                whileHover={{ x: 3 }}
-                                                                variants={itemVariants}
-                                                                layout
-                                                            >
-                                                                <div 
-                                                                    className="flex justify-between items-center cursor-pointer"
-                                                                    onClick={() => toggleRoadExpand(road.id)}
-                                                                >
-                                                                    <span className={`font-medium text-sm flex-1 ${style.text}`}>{road.id}. {road.name}</span>
-                                                                    <motion.button
-                                                                        animate={{ rotate: expandedRoads[road.id] ? 180 : 0 }}
-                                                                        transition={{ duration: 0.3 }}
-                                                                        className="ml-2 p-1 rounded-full hover:bg-black hover:bg-opacity-10 transition-colors"
-                                                                    >
-                                                                        <ChevronDown className={`h-3 w-3 ${style.text}`} />
-                                                                    </motion.button>
-                                                                </div>
-                                                                
-                                                                <AnimatePresence>
-                                                                    {expandedRoads[road.id] && (
-                                                                        <motion.div
-                                                                            initial={{ height: 0, opacity: 0 }}
-                                                                            animate={{ height: "auto", opacity: 1 }}
-                                                                            exit={{ height: 0, opacity: 0 }}
-                                                                            transition={{ duration: 0.3 }}
-                                                                            className="overflow-hidden"
-                                                                        >
-                                                                            <div className="mt-2 pt-2 border-t border-gray-100 text-xs text-gray-600">
-                                                                                {road.details}
-                                                                            </div>
-                                                                        </motion.div>
-                                                                    )}
-                                                                </AnimatePresence>
-                                                            </motion.div>
-                                                        ))
-                                                    ) : (
-                                                        <div className="text-center text-xs text-gray-500 py-4">
-                                                            No roads found matching &quot;{searchQuery}&quot;
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                
-                                                {/* Count badge */}
-                                                <div className="text-xs text-center opacity-60">
-                                                    Showing {filteredRoads.length} of {BANNED_ROADS.length} roads
-                                                </div>
-                                            </div>
-                                        )}
-                                        
-                                        {activeTab === 1 && (
-                                            <div className="space-y-3">
-                                                <motion.div 
-                                                    className="bg-white bg-opacity-60 p-3 rounded-md"
-                                                    variants={itemVariants}
-                                                >
-                                                    <div className="mb-2">
-                                                        <div className="flex items-center mb-1">
-                                                            <Calendar className={`h-4 w-4 mr-2 ${style.text}`} />
-                                                            <span className={`font-medium text-sm ${style.text}`}>Duration</span>
-                                                        </div>
-                                                        <p className="text-xs ml-6">{ENFORCEMENT_DETAILS.duration}</p>
-                                                    </div>
-                                                    
-                                                    <div className="mb-2">
-                                                        <div className="flex items-center mb-1">
-                                                            <Shield className={`h-4 w-4 mr-2 ${style.text}`} />
-                                                            <span className={`font-medium text-sm ${style.text}`}>Legal Basis</span>
-                                                        </div>
-                                                        <p className="text-xs ml-6">{ENFORCEMENT_DETAILS.legalBasis}</p>
-                                                    </div>
-                                                    
-                                                    <div>
-                                                        <div className="flex items-center mb-1">
-                                                            <AlertTriangle className={`h-4 w-4 mr-2 ${style.text}`} />
-                                                            <span className={`font-medium text-sm ${style.text}`}>Enforcement</span>
-                                                        </div>
-                                                        <p className="text-xs ml-6">{ENFORCEMENT_DETAILS.enforcement}</p>
-                                                    </div>
-                                                </motion.div>
-                                                
-                                                <motion.div 
-                                                    className={`${style.bg.replace('/90', '')} p-2 rounded-md flex items-center text-xs ${style.text}`}
-                                                    variants={itemVariants}
-                                                >
-                                                    <Info className={`h-4 w-4 mr-2 flex-shrink-0 ${style.text}`} />
-                                                    <span>Violations are subject to legal action under Section 188 of Pakistan Penal Code</span>
-                                                </motion.div>
-                                            </div>
-                                        )}
-                                        
-                                        {activeTab === 2 && (
-                                            <div className="space-y-3">
-                                                <div className={`ml-2 border-l-2 border-dashed border-opacity-50 pl-4 space-y-3`}
-                                                         style={{ borderColor: variantStyles[variant].accent }}>
-                                                    <motion.div 
-                                                        variants={itemVariants}
-                                                        className="relative"
-                                                    >
-                                                        <div className="absolute -left-6 w-3 h-3 rounded-full bg-opacity-100 mt-1" style={{ backgroundColor: variantStyles[variant].accent }} />
-                                                        <p className={`font-medium text-sm ${style.text}`}>April 15, 2025</p>
-                                                        <p className="text-xs opacity-75">Ban goes into effect</p>
-                                                    </motion.div>
-                                                    
-                                                    <motion.div 
-                                                        variants={itemVariants}
-                                                        className="relative"
-                                                    >
-                                                        <div className="absolute -left-6 w-3 h-3 rounded-full bg-opacity-70 mt-1" style={{ backgroundColor: variantStyles[variant].accent }} />
-                                                        <p className={`font-medium text-sm ${style.text}`}>May 15, 2025</p>
-                                                        <p className="text-xs opacity-75">Mid-term review of ban implementation</p>
-                                                    </motion.div>
-                                                    
-                                                    <motion.div 
-                                                        variants={itemVariants}
-                                                        className="relative"
-                                                    >
-                                                        <div className="absolute -left-6 w-3 h-3 rounded-full bg-opacity-40 mt-1" style={{ backgroundColor: variantStyles[variant].accent }} />
-                                                        <p className={`font-medium text-sm ${style.text}`}>June 14, 2025</p>
-                                                        <p className="text-xs opacity-75">Ban scheduled to end (subject to review)</p>
-                                                    </motion.div>
-                                                    
-                                                    <motion.div 
-                                                        variants={itemVariants}
-                                                        className="relative mt-4"
-                                                    >
-                                                        <div className="text-xs italic flex items-center opacity-75">
-                                                            <Clock className={`h-3 w-3 mr-1 ${style.text}`} />
-                                                            <span>Timeline subject to change by authorities</span>
-                                                        </div>
-                                                    </motion.div>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </motion.div>
-                                </AnimatePresence>
-                                
-                                {/* Footer with quick info */}
-                                <motion.div 
-                                    className="mt-4 pt-2 border-t border-gray-200 border-opacity-30 text-xs flex justify-between items-center opacity-70"
-                                    variants={itemVariants}
-                                >
-                                    <div className="flex items-center">
-                                        <Clock className="h-3 w-3 mr-1" />
-                                        <span>Last updated: 10:45 AM 4/5/2025</span>
-                                    </div>
-                                    <div>
-                                        <motion.button
-                                            className={`text-xs flex items-center opacity-70 hover:opacity-100 ${style.text}`}
-                                            whileHover={{ scale: 1.05 }}
-                                            whileTap={{ scale: 0.95 }}
-                                        >
-                                            <span className="underline">
-                                               <Link href="https://arynews.tv/karachi-enforces-rickshaw-ban-on-11-busy-roads/">Official News</Link> 
-                                                </span>
-                                            <ExternalLink className="h-2 w-2 ml-1" />
-                                        </motion.button>
-                                    </div>
-                                </motion.div>
-                            </motion.div>
-                        </motion.div>
+                            <X className={`h-5 w-5 ${style.text}`} />
+                        </motion.button>
                     )}
-
-                    {/* Swipe indicator */}
+                </div>
+                {expandable && (
                     <motion.div
-                        className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200"
-                        initial={{ scaleX: 0 }}
-                        animate={{ scaleX: dragX.get() < 0 ? Math.min(Math.abs(dragX.get()) / 100, 1) : 0 }}
+                        variants={expandVariants}
+                        initial="collapsed"
+                        animate={isExpanded ? "expanded" : "collapsed"}
+                        className="overflow-hidden"
                     >
                         <motion.div 
-                            className="h-full"
-                            style={{ 
-                                width: `${Math.min(Math.abs(dragX.get()) / 100 * 100, 100)}%`,
-                                backgroundColor: variantStyles[variant].accent
-                            }}
-                        />
+                            className="mt-4 pt-4 border-t border-opacity-30"
+                            style={{ borderColor: style.accent }}
+                            variants={itemVariants}
+                        >
+                            <div className="flex space-x-2 mb-4 flex-wrap">
+                                <motion.button
+                                    className={`px-4 py-2 text-sm font-semibold rounded-md transition-colors mb-2 focus:outline-none focus:ring-2 focus:ring-black/30 ${activeTab === 0 ? style.button : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+                                    onClick={() => setActiveTab(0)}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    aria-label="Show banned roads"
+                                >
+                                    <div className="flex items-center">
+                                        <List className="h-4 w-4 mr-2" />
+                                        <span>Banned Roads</span>
+                                    </div>
+                                </motion.button>
+                                <motion.button
+                                    className={`px-4 py-2 rounded-md text-sm font-semibold transition-colors mb-2 focus:outline-none focus:ring-2 focus:ring-black/30 ${activeTab === 1 ? style.button : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+                                    onClick={() => setActiveTab(1)}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    aria-label="Show enforcement details"
+                                >
+                                    <div className="flex items-center">
+                                        <Shield className="h-4 w-4 mr-2" />
+                                        <span>Enforcement</span>
+                                    </div>
+                                </motion.button>
+                                <motion.button
+                                    className={`px-4 py-2 rounded-md text-sm font-semibold transition-colors mb-2 focus:outline-none focus:ring-2 focus:ring-black/30 ${activeTab === 2 ? style.button : 'bg-gray-200 hover:bg-gray-300 text-gray-700'}`}
+                                    onClick={() => setActiveTab(2)}
+                                    whileHover={{ scale: 1.05 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    aria-label="Show timeline"
+                                >
+                                    <div className="flex items-center">
+                                        <Calendar className="h-4 w-4 mr-2" />
+                                        <span>Timeline</span>
+                                    </div>
+                                </motion.button>
+                            </div>
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={activeTab}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    transition={{ duration: 0.2 }}
+                                >
+                                    {activeTab === 0 && (
+                                        <div className="space-y-4">
+                                            <div className="relative">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Search roads..."
+                                                    value={searchQuery}
+                                                    onChange={handleSearchChange}
+                                                    className="w-full px-4 py-2 bg-white bg-opacity-90 rounded-md border border-gray-300 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-black/30"
+                                                    style={{ borderColor: 'rgba(0,0,0,0.15)' }}
+                                                    aria-label="Search roads"
+                                                />
+                                                {searchQuery && (
+                                                    <button
+                                                        onClick={() => setSearchQuery('')}
+                                                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                                                        aria-label="Clear search"
+                                                    >
+                                                        <X className="h-4 w-4" />
+                                                    </button>
+                                                )}
+                                            </div>
+                                            <div className="max-h-64 overflow-y-auto pr-1 space-y-3">
+                                                {filteredRoads.length > 0 ? (
+                                                    filteredRoads.map((road) => (
+                                                        <motion.div 
+                                                            key={road.id}
+                                                            className="bg-white bg-opacity-90 p-3 rounded-md shadow border border-gray-200"
+                                                            whileHover={{ x: 3 }}
+                                                            variants={itemVariants}
+                                                            layout
+                                                        >
+                                                            <div 
+                                                                className="flex justify-between items-center cursor-pointer"
+                                                                onClick={() => toggleRoadExpand(road.id)}
+                                                                tabIndex={0}
+                                                                aria-expanded={!!expandedRoads[road.id]}
+                                                                aria-label={`Expand details for ${road.name}`}
+                                                                onKeyDown={e => {
+                                                                    if (e.key === 'Enter' || e.key === ' ') toggleRoadExpand(road.id);
+                                                                }}
+                                                            >
+                                                                <span className={`font-semibold text-base flex-1 ${style.text}`}>{road.id}. {road.name}</span>
+                                                                <motion.button
+                                                                    animate={{ rotate: expandedRoads[road.id] ? 180 : 0 }}
+                                                                    transition={{ duration: 0.3 }}
+                                                                    className="ml-2 p-1 rounded-full hover:bg-black/10 focus:outline-none focus:ring-2 focus:ring-black/30 transition-colors"
+                                                                    aria-label={expandedRoads[road.id] ? "Collapse details" : "Expand details"}
+                                                                >
+                                                                    <ChevronDown className={`h-4 w-4 ${style.text}`} />
+                                                                </motion.button>
+                                                            </div>
+                                                            <AnimatePresence>
+                                                                {expandedRoads[road.id] && (
+                                                                    <motion.div
+                                                                        initial={{ height: 0, opacity: 0 }}
+                                                                        animate={{ height: "auto", opacity: 1 }}
+                                                                        exit={{ height: 0, opacity: 0 }}
+                                                                        transition={{ duration: 0.3 }}
+                                                                        className="overflow-hidden"
+                                                                    >
+                                                                        <div className="mt-2 pt-2 border-t border-gray-200 text-sm text-gray-700">
+                                                                            {road.details}
+                                                                        </div>
+                                                                    </motion.div>
+                                                                )}
+                                                            </AnimatePresence>
+                                                        </motion.div>
+                                                    ))
+                                                ) : (
+                                                    <div className="text-center text-sm text-gray-500 py-4">
+                                                        No roads found matching &quot;{searchQuery}&quot;
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="text-sm text-center opacity-70">
+                                                Showing {filteredRoads.length} of {BANNED_ROADS.length} roads
+                                            </div>
+                                        </div>
+                                    )}
+                                    {activeTab === 1 && (
+                                        <div className="space-y-4">
+                                            <motion.div 
+                                                className="bg-white bg-opacity-90 p-4 rounded-md"
+                                                variants={itemVariants}
+                                            >
+                                                <div className="mb-3">
+                                                    <div className="flex items-center mb-1">
+                                                        <Calendar className={`h-5 w-5 mr-2 ${style.text}`} />
+                                                        <span className={`font-semibold text-base ${style.text}`}>Duration</span>
+                                                    </div>
+                                                    <p className="text-sm ml-7">{ENFORCEMENT_DETAILS.duration}</p>
+                                                </div>
+                                                <div className="mb-3">
+                                                    <div className="flex items-center mb-1">
+                                                        <Shield className={`h-5 w-5 mr-2 ${style.text}`} />
+                                                        <span className={`font-semibold text-base ${style.text}`}>Legal Basis</span>
+                                                    </div>
+                                                    <p className="text-sm ml-7">{ENFORCEMENT_DETAILS.legalBasis}</p>
+                                                </div>
+                                                <div>
+                                                    <div className="flex items-center mb-1">
+                                                        <AlertTriangle className={`h-5 w-5 mr-2 ${style.text}`} />
+                                                        <span className={`font-semibold text-base ${style.text}`}>Enforcement</span>
+                                                    </div>
+                                                    <p className="text-sm ml-7">{ENFORCEMENT_DETAILS.enforcement}</p>
+                                                </div>
+                                            </motion.div>
+                                            <motion.div 
+                                                className={`${style.bg.replace('/95', '')} p-3 rounded-md flex items-center text-sm ${style.text}`}
+                                                variants={itemVariants}
+                                            >
+                                                <Info className={`h-5 w-5 mr-2 flex-shrink-0 ${style.text}`} />
+                                                <span>Violations are subject to legal action under Section 188 of Pakistan Penal Code</span>
+                                            </motion.div>
+                                        </div>
+                                    )}
+                                    {activeTab === 2 && (
+                                        <div className="space-y-4">
+                                            <div className={`ml-2 border-l-4 border-dashed border-opacity-70 pl-6 space-y-4`}
+                                                     style={{ borderColor: variantStyles[variant].accent }}>
+                                                <motion.div 
+                                                    variants={itemVariants}
+                                                    className="relative"
+                                                >
+                                                    <div className="absolute -left-7 w-4 h-4 rounded-full bg-opacity-100 mt-1" style={{ backgroundColor: variantStyles[variant].accent }} />
+                                                    <p className={`font-semibold text-base ${style.text}`}>April 15, 2025</p>
+                                                    <p className="text-sm opacity-80">Ban goes into effect</p>
+                                                </motion.div>
+                                                <motion.div 
+                                                    variants={itemVariants}
+                                                    className="relative"
+                                                >
+                                                    <div className="absolute -left-7 w-4 h-4 rounded-full bg-opacity-70 mt-1" style={{ backgroundColor: variantStyles[variant].accent }} />
+                                                    <p className={`font-semibold text-base ${style.text}`}>May 15, 2025</p>
+                                                    <p className="text-sm opacity-80">Mid-term review of ban implementation</p>
+                                                </motion.div>
+                                                <motion.div 
+                                                    variants={itemVariants}
+                                                    className="relative"
+                                                >
+                                                    <div className="absolute -left-7 w-4 h-4 rounded-full bg-opacity-40 mt-1" style={{ backgroundColor: variantStyles[variant].accent }} />
+                                                    <p className={`font-semibold text-base ${style.text}`}>June 14, 2025</p>
+                                                    <p className="text-sm opacity-80">Ban scheduled to end (subject to review)</p>
+                                                </motion.div>
+                                                <motion.div 
+                                                    variants={itemVariants}
+                                                    className="relative"
+                                                >
+                                                    <div className="absolute -left-7 w-4 h-4 rounded-full bg-opacity-40 mt-1" style={{ backgroundColor: variantStyles[variant].accent }} />
+                                                    <p className={`font-semibold text-base ${style.text}`}>June 15, 2025</p>
+                                                    <p className="text-sm opacity-80">Ban scheduled to be imposed parmanently</p>
+                                                </motion.div>
+                                                <motion.div 
+                                                    variants={itemVariants}
+                                                    className="relative mt-4"
+                                                >
+                                                    <div className="text-sm italic flex items-center opacity-80">
+                                                        <Clock className={`h-4 w-4 mr-2 ${style.text}`} />
+                                                        <span>Timeline subject to change by authorities</span>
+                                                    </div>
+                                                </motion.div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </motion.div>
+                            </AnimatePresence>
+                            <motion.div 
+                                className="mt-6 pt-3 border-t border-gray-300 border-opacity-50 text-sm flex justify-between items-center opacity-80"
+                                variants={itemVariants}
+                            >
+                                <div className="flex items-center">
+                                    <Clock className="h-4 w-4 mr-2" />
+                                    <span>Last updated: 11:40 AM 4/5/2025</span>
+                                </div>
+                                <div>
+                                    <motion.button
+                                        className={`text-sm flex items-center opacity-80 hover:opacity-100 ${style.text} focus:outline-none focus:ring-2 focus:ring-black/30`}
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        aria-label="Official news link"
+                                    >
+                                        <span className="underline">
+                                           <Link href="https://arynews.tv/karachi-enforces-rickshaw-ban-on-11-busy-roads/">Official News</Link> 
+                                        </span>
+                                        <ExternalLink className="h-3 w-3 ml-2" />
+                                    </motion.button>
+                                </div>
+                            </motion.div>
+                        </motion.div>
                     </motion.div>
+                )}
+                <motion.div
+                    className="absolute bottom-0 left-0 right-0 h-1 bg-gray-300"
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: dragX.get() < 0 ? Math.min(Math.abs(dragX.get()) / 100, 1) : 0 }}
+                >
+                    <motion.div 
+                        className="h-full"
+                        style={{ 
+                            width: `${Math.min(Math.abs(dragX.get()) / 100 * 100, 100)}%`,
+                            backgroundColor: variantStyles[variant].accent
+                        }}
+                    />
                 </motion.div>
-            )}
+            </motion.div>
         </AnimatePresence>
     );
 }
+
+export default NotificationBanner;
