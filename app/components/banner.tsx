@@ -64,6 +64,7 @@ export default function NotificationBanner({
     expandable = true,
     pulseEffect = true,
     position = 'inline',
+    highlightWords = false, // added default value
     animated = true,
     showLocationPin = true,
     glassmorphism = true,
@@ -222,6 +223,22 @@ export default function NotificationBanner({
         setSearchQuery(e.target.value);
     };
 
+    // Function to highlight words
+    const getHighlightedText = (text: string) => {
+        if (!highlightWords) {
+            return text;
+        }
+
+        const wordsToHighlight = ["banned", "restricted"]; // Example words
+        const regex = new RegExp(`\\b(${wordsToHighlight.join('|')})\\b`, 'gi');
+        return text.split(regex).map((part, index) => {
+            if (wordsToHighlight.some(word => part.toLowerCase() === word.toLowerCase())) {
+                return <span key={index} className={style.highlight}>{part}</span>;
+            }
+            return part;
+        });
+    };
+
     // Get the styles based on the variant
     const style = variantStyles[variant];
     // Get the position styles
@@ -281,8 +298,6 @@ export default function NotificationBanner({
         }
     };
 
-    // Create highlighted text content
-    
     // Swipe to dismiss
     const onDragEnd = () => {
         if (dragX.get() < -80) {
@@ -364,13 +379,13 @@ export default function NotificationBanner({
                             </motion.div>
                             <div className="flex-1">
                                 <div className="text-sm md:text-base font-black flex items-center">
-                                 
-three wheelers banned on specefic roads
-                                    
+                                Three wheelers banned throughout Karachi on 11 roads
+
+                                   
                                     {expandable && (
                                         <motion.button 
                                             onClick={toggleExpand} 
-                                            className={`ml-2 p-1 rounded-full hover:bg-black hover:bg-opacity-10 transition-colors`}
+                                            className={`ml-2 p-1 rounded-full  hover:bg-opacity-10 transition-colors`}
                                             whileHover={{ scale: 1.1, rotate: isExpanded ? -180 : 0 }}
                                             whileTap={{ scale: 0.9 }}
                                             animate={{ rotate: isExpanded ? 180 : 0 }}
@@ -631,7 +646,7 @@ three wheelers banned on specefic roads
                                 >
                                     <div className="flex items-center">
                                         <Clock className="h-3 w-3 mr-1" />
-                                        <span>Last updated: 1:45 AM 4/5/2025</span>
+                                        <span>Last updated: 10:45 AM 4/5/2025</span>
                                     </div>
                                     <div>
                                         <motion.button
@@ -640,7 +655,7 @@ three wheelers banned on specefic roads
                                             whileTap={{ scale: 0.95 }}
                                         >
                                             <span className="underline">
-                                               <Link href="https://arynews.tv/karachi-enforces-rickshaw-ban-on-11-busy-roads/">Official Notice</Link> 
+                                               <Link href="https://arynews.tv/karachi-enforces-rickshaw-ban-on-11-busy-roads/">Official News</Link> 
                                                 </span>
                                             <ExternalLink className="h-2 w-2 ml-1" />
                                         </motion.button>
